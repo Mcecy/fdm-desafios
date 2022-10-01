@@ -1,4 +1,4 @@
-# Desafio Bar do Módulo 4 - Programação Moderna
+# Desafio Bar do Módulo 4 - Capítulo 6
 
 ## Sobre
 
