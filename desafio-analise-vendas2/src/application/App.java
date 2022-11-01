@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import model.entities.Sale;
 
@@ -33,18 +33,18 @@ public class App {
                 line = br.readLine();
             }
 
-            Comparator<Sale> comp = (s1, s2) -> s1.compareTo(s2);
-            List<Sale> sales = list.stream().filter(s -> s.getYear().equals(2016)).map(s -> s).sorted(comp.reversed()).collect(Collectors.toList());
+            Set<String> sellers = new HashSet<>();
+            for (Sale sale : list) {
+                sellers.add(sale.getSeller());
+            }
 
-            System.out.println("Cinco primeiras vendas de 2016 de maior preço médio:");
-            sales.subList(0, 5).forEach(System.out::println);
+            System.out.println("\nTotal de vendas por vendedor: ");
 
-            Double sum1 = list.stream().filter(s -> s.getSeller().equals("Logan") && s.getMonth().equals(1))
-                    .map(s -> s.getTotal()).reduce(0.0, (x, y) -> x + y);
-            Double sum2 = list.stream().filter(s -> s.getSeller().equals("Logan") && s.getMonth().equals(7))
-                    .map(s -> s.getTotal()).reduce(0.0, (x, y) -> x + y);
-            Double sum = sum1 + sum2;
-            System.out.println("\nValor total vendido pelo vendedor Logan nos meses 1 e 7 = " + String.format("%.2f%n", sum));
+            for (String seller : sellers) {
+                Double total = list.stream().filter(s -> s.getSeller().equals(seller))
+                        .map(s -> s.getTotal()).reduce(0.0, (x, y) -> x + y);
+                System.out.println(seller + " - R$ " + String.format("%.2f", total));
+            }
         } catch (IOException e) {
             System.out.println("Erro: " + path + " (O sistema não pode encontrar o arquivo especificado)");
         }
